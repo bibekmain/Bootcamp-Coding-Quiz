@@ -1,7 +1,42 @@
 body{
     background-color: rgb(153, 204, 255);
 }
+.show{
+    display: block;
+}
+.hide{
+    display: none;
+}
 
-#highscore-btn{
+button{
+    position: relative;
+    top: 20px;
+    left: 20px;
+    background-color: palevioletred;
+    border: white solid;
+    border-radius: 20px;
+}
+button:hover{
+    background-color: rgb(153, 204, 255);
+    border: black solid;
+}
 
+aside{
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: large;
+    font-weight: bold;
+}
+
+#main{
+    text-align: center;
+}
+#begin{
+    text-align: center;
+}
+
+p{
+    font-size: large;
+    font-weight: 300;
 }
