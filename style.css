@@ -58,4 +58,16 @@ p{
     height: 30px;
     display: inline;
     position: absolute;
+    background-color: black;
+    color: white;
+    border: solid black 3px;
+}
+#exit-highscore:hover{
+    background-color: whitesmoke;
+    color: black;
+    font-weight: bold;
+}
+
+.answers{
+    font-size: larger;
 }
