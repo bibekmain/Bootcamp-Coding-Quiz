@@ -19,6 +19,7 @@ button{
 button:hover{
     background-color: rgb(153, 204, 255);
     border: black solid;
+    cursor: pointer;
 }
 
 aside{
@@ -29,7 +30,7 @@ aside{
     font-weight: bold;
 }
 
-#main{
+#main, #quiz{
     text-align: center;
 }
 #begin{
@@ -39,4 +40,22 @@ aside{
 p{
     font-size: large;
     font-weight: 300;
+}
+
+#highscore-display{
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    border: 3px black solid;
+    border-radius: 20px;
+    background-color: whitesmoke;
+    left: 25%;
+    bottom: 25%;
+    text-align: center;
+}
+#exit-highscore{
+    width: 30px;
+    height: 30px;
+    display: inline;
+    position: absolute;
 }
