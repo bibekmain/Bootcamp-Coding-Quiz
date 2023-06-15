@@ -5,14 +5,13 @@ var quizEl = document.querySelector("#quiz");
 
 var questionNumberEl = document.querySelector("#question-number");
 var questionEl = document.querySelector("#question");
-var allChoices = document.querySelector(".answers");
+var allChoices = document.getElementsByClassName("answers");
 
 var choices = {};
+choices['choice_0'] = document.querySelector("#choice-0");
 choices['choice_1'] = document.querySelector("#choice-1");
-choices['choice_1'].setAttribute("data-correct", "false");
 choices['choice_2'] = document.querySelector("#choice-2");
 choices['choice_3'] = document.querySelector("#choice-3");
-choices['choice_4'] = document.querySelector("#choice-4");
 
 var highscoreBtn = document.querySelector("#highscore-btn");
 var highscoreEl = document.querySelector("#highscore-display")
@@ -20,8 +19,8 @@ var exitHighscore = document.querySelector("#exit-highscore");
 var highscoreContent = document.querySelector("#highscore-content");
 
 var correctAnswers = 0;
-var secondsLeft = 60;
-var currQuestion = 1;
+var secondsLeft = 80;
+var currQuestion = 0;
 
 //TODO:IMPLEMENT LOCAL STORAGE FOR HIGHSCORES
 
@@ -55,15 +54,12 @@ for(let i=0; i<trivia.length; i++){//shuffle the answers in each trivia question
     trivia[i].answers = shuffle(trivia[i].answers);
 }
 
-console.log(trivia == referenceTrivia);
-
 beginBtn.addEventListener("click", function(){//begin quiz button event listener.
     quizEl.setAttribute("class", "show");
     mainEl.setAttribute("class", "hide");
     highscoreBtn.setAttribute("class", "hide");
     highscoreEl.setAttribute("class", "hide");
-
-    quiz(1);
+    ask(currQuestion);
 
     var time = setInterval(function(){
         secondsLeft--;
@@ -75,25 +71,23 @@ beginBtn.addEventListener("click", function(){//begin quiz button event listener
     }, 1000);
 });
 
-function quiz(qNum){
+function ask(qNum){
     //question number
     console.log(qNum);
     questionNumberEl.innerHTML = `Question ${qNum}: `;
 
     //formatting the question
-    let currentQuestion = qNum - 1;
-    questionEl.innerHTML = trivia[currentQuestion].question;
+    questionEl.innerHTML = trivia[qNum].question;
 
     //formatting the answers
-    choices["choice_1"].innerHTML = trivia[currentQuestion].answers[0];
-    choices["choice_2"].innerHTML = trivia[currentQuestion].answers[1];
-    choices["choice_3"].innerHTML = trivia[currentQuestion].answers[2];
-    choices["choice_4"].innerHTML = trivia[currentQuestion].answers[3];
+    choices["choice_0"].innerHTML = trivia[qNum].answers[0];
+    choices["choice_1"].innerHTML = trivia[qNum].answers[1];
+    choices["choice_2"].innerHTML = trivia[qNum].answers[2];
+    choices["choice_3"].innerHTML = trivia[qNum].answers[3];
 
-    for(let i=0; i<trivia[currentQuestion].answers.length; i++){
-        let currChoice = `choice_${i+1}`;
-        console.log(trivia[currentQuestion].answers[i], referenceTrivia[currentQuestion].answers[0]);
-        if(trivia[currentQuestion].answers[i] === referenceTrivia[currentQuestion].answers[0]){
+    for(let i=0; i<trivia[qNum].answers.length; i++){//assigning each answer choice to correct/incorrect
+        let currChoice = `choice_${i}`;
+        if(trivia[qNum].answers[i] === referenceTrivia[qNum].answers[0]){
             choices[currChoice].setAttribute("data-correct", "true");
             console.log(choices[currChoice]);
         }else{
@@ -102,10 +96,55 @@ function quiz(qNum){
         }
     }
 
-    allChoices.addEventListener("click", function(){
+    //call checkCorrect
+    checkCorrect(qNum);
+}
 
-    })
-
+function checkCorrect(questionNumber){
+    choices["choice_0"].addEventListener("click", function(){
+        if(choices["choice_0"].getAttribute("data-correct") === "true"){
+            correctAnswers++;
+            currQuestion++;
+            return ask(currQuestion);
+        }else{
+            secondsLeft-=5;
+            currQuestion++;
+            return ask(currQuestion);
+        }
+    });
+    choices["choice_1"].addEventListener("click", function(){
+        if(choices["choice_1"].getAttribute("data-correct") === "true"){
+            correctAnswers++;
+            currQuestion++;
+            return ask(currQuestion);
+        }else{
+            secondsLeft-=5;
+            currQuestion++;
+            return ask(currQuestion);
+        }
+    });
+    choices["choice_2"].addEventListener("click", function(){
+        if(choices["choice_2"].getAttribute("data-correct") === "true"){
+            correctAnswers++;
+            currQuestion++;
+            return ask(currQuestion);
+        }else{
+            secondsLeft-=5;
+            currQuestion++;
+            return ask(currQuestion);
+        }
+    });
+    choices["choice_3"].addEventListener("click", function(){
+        if(choices["choice_3"].getAttribute("data-correct") === "true"){
+            correctAnswers++;
+            currQuestion++;
+            return ask(currQuestion);
+        }else{
+            secondsLeft-=5;
+            currQuestion++;
+            return ask(currQuestion);
+        }
+    });
 }
 
 
