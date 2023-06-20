@@ -71,3 +71,10 @@ p{
 .answers{
     font-size: larger;
 }
+
+ul{
+    list-style-type: none;
+}
+li{
+    font-size: larger;
+}

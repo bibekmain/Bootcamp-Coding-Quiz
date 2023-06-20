@@ -19,10 +19,30 @@ var exitHighscore = document.querySelector("#exit-highscore");
 var highscoreContent = document.querySelector("#highscore-content");
 
 var correctAnswers = 0;
-var secondsLeft = 10;
+var secondsLeft = 60;
 var currQuestion = 0;
 
-//TODO:IMPLEMENT LOCAL STORAGE FOR HIGHSCORES
+//IMPLEMENT LOCAL STORAGE FOR HIGHSCORES
+const testObject = {
+    "BM": 23
+}
+
+window.localStorage.setItem("highscores", JSON.stringify(testObject));
+var storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
+var highscoreHtml = `<ul>`;
+console.log(storedHighscores);
+
+if(storedHighscores){
+    for (const score in storedHighscores) {
+        highscoreHtml += `<li>${score}: ${storedHighscores[score]}<li>`
+    }
+    highscoreHtml += `</ul>`
+}
+highscoreContent.innerHTML = highscoreHtml;
+
+function updateHighscores(highscoreObject){
+    window.localStorage.setItem("highscores", JSON.stringify(highscoreObject));
+}
 
 function shuffle(array){//function that shuffles a given array
     tempArr = array;
@@ -75,7 +95,7 @@ beginBtn.addEventListener("click", function(){//begin quiz button event listener
 
 function generateQuestion(qNum){
     //question number
-    console.log(qNum);
+    console.log("current question: ", qNum);
     questionNumberEl.innerHTML = `Question ${qNum+1}: `;
 
     //formatting the question
@@ -91,21 +111,22 @@ function generateQuestion(qNum){
         let currChoice = `choice_${i}`;
         if(trivia[qNum].answers[i] === referenceTrivia[qNum].answers[0]){
             choices[currChoice].setAttribute("data-correct", "true");
-            console.log(choices[currChoice]);
+            // console.log(choices[currChoice]);
         }else{
             choices[currChoice].setAttribute("data-correct", "false");
-            console.log(choices[currChoice]);
+            // console.log(choices[currChoice]);
         }
     }
-
+//TODO: find a way to increment currQuestion only once after each answer of a question.
     //call checkCorrect
     checkCorrect(qNum);
 }
 
-function checkCorrect(questionNumber){
+function checkCorrect(questionNumber){ //checks if the clicked answer is correct
     for(let i=0; i<allChoices.length; i++){
         let currChoice = allChoices[i];
         let currChoiceId = "choice_" + i;
+        let ansClicked = false;
 
         console.log("id: ", currChoiceId);
         console.log("choice" + i, currChoice);
@@ -122,71 +143,27 @@ function checkCorrect(questionNumber){
                 console.log("correctAnswers", correctAnswers);
             }
         });
+        if(ansClicked){break;}
     }
 
     currQuestion++;
+    
     return checkEnd();
 }
 
 function checkEnd(){
     let isEnd = false;
 
-    if(currQuestion === 9 || secondsLeft <= 0){
+    if(currQuestion === 10 || secondsLeft <= 0){
         isEnd = true;
     }
-    
+    console.log("current Question: (after increment)", currQuestion);
     if(!isEnd){return generateQuestion(currQuestion)}
+    else{
+        clearInterval(time);
+        //TODO:make a text entry for inputing highscore in local storage, use updateHighscores().
+    }
 }
-
-
-
-// function checkCorrect(questionNumber){
-//     choices["choice_0"].addEventListener("click", function(){
-//         if(choices["choice_0"].getAttribute("data-correct") === "true"){
-//             correctAnswers++;
-//             currQuestion++;
-//             ask(currQuestion);
-//         }else{
-//             secondsLeft-=5;
-//             currQuestion++;
-//             ask(currQuestion);
-//         }
-//     });
-//     choices["choice_1"].addEventListener("click", function(){
-//         if(choices["choice_1"].getAttribute("data-correct") === "true"){
-//             correctAnswers++;
-//             currQuestion++;
-//             ask(currQuestion);
-//         }else{
-//             secondsLeft-=5;
-//             currQuestion++;
-//             ask(currQuestion);
-//         }
-//     });
-//     choices["choice_2"].addEventListener("click", function(){
-//         if(choices["choice_2"].getAttribute("data-correct") === "true"){
-//             correctAnswers++;
-//             currQuestion++;
-//             ask(currQuestion);
-//         }else{
-//             secondsLeft-=5;
-//             currQuestion++;
-//             ask(currQuestion);
-//         }
-//     });
-//     choices["choice_3"].addEventListener("click", function(){
-//         if(choices["choice_3"].getAttribute("data-correct") === "true"){
-//             correctAnswers++;
-//             currQuestion++;
-//             ask(currQuestion);
-//         }else{
-//             secondsLeft-=5;
-//             currQuestion++;
-//             ask(currQuestion);
-//         }
-//     });
-// }
-//TODO:Answer skips from question 3 to question 7 while testing quiz...
 
 highscoreBtn.addEventListener("click", function(){
     highscoreEl.setAttribute("class", "show");
