@@ -19,7 +19,7 @@ var exitHighscore = document.querySelector("#exit-highscore");
 var highscoreContent = document.querySelector("#highscore-content");
 
 var correctAnswers = 0;
-var secondsLeft = 80;
+var secondsLeft = 10;
 var currQuestion = 0;
 
 //TODO:IMPLEMENT LOCAL STORAGE FOR HIGHSCORES
@@ -59,22 +59,24 @@ beginBtn.addEventListener("click", function(){//begin quiz button event listener
     mainEl.setAttribute("class", "hide");
     highscoreBtn.setAttribute("class", "hide");
     highscoreEl.setAttribute("class", "hide");
-    ask(currQuestion);
 
     var time = setInterval(function(){
         secondsLeft--;
         timer.textContent = secondsLeft;
 
-        if(secondsLeft == 0){
+        if(secondsLeft < 0){
+            secondsLeft = 0;
             clearInterval(time);
         }
     }, 1000);
+
+    generateQuestion(currQuestion);
 });
 
-function ask(qNum){
+function generateQuestion(qNum){
     //question number
     console.log(qNum);
-    questionNumberEl.innerHTML = `Question ${qNum}: `;
+    questionNumberEl.innerHTML = `Question ${qNum+1}: `;
 
     //formatting the question
     questionEl.innerHTML = trivia[qNum].question;
@@ -101,52 +103,90 @@ function ask(qNum){
 }
 
 function checkCorrect(questionNumber){
-    choices["choice_0"].addEventListener("click", function(){
-        if(choices["choice_0"].getAttribute("data-correct") === "true"){
-            correctAnswers++;
-            currQuestion++;
-            return ask(currQuestion);
-        }else{
-            secondsLeft-=5;
-            currQuestion++;
-            return ask(currQuestion);
-        }
-    });
-    choices["choice_1"].addEventListener("click", function(){
-        if(choices["choice_1"].getAttribute("data-correct") === "true"){
-            correctAnswers++;
-            currQuestion++;
-            return ask(currQuestion);
-        }else{
-            secondsLeft-=5;
-            currQuestion++;
-            return ask(currQuestion);
-        }
-    });
-    choices["choice_2"].addEventListener("click", function(){
-        if(choices["choice_2"].getAttribute("data-correct") === "true"){
-            correctAnswers++;
-            currQuestion++;
-            return ask(currQuestion);
-        }else{
-            secondsLeft-=5;
-            currQuestion++;
-            return ask(currQuestion);
-        }
-    });
-    choices["choice_3"].addEventListener("click", function(){
-        if(choices["choice_3"].getAttribute("data-correct") === "true"){
-            correctAnswers++;
-            currQuestion++;
-            return ask(currQuestion);
-        }else{
-            secondsLeft-=5;
-            currQuestion++;
-            return ask(currQuestion);
-        }
-    });
+    for(let i=0; i<allChoices.length; i++){
+        let currChoice = allChoices[i];
+        let currChoiceId = "choice_" + i;
+
+        console.log("id: ", currChoiceId);
+        console.log("choice" + i, currChoice);
+        currChoice.addEventListener("click", function(){
+            console.log("Clicked choice " + i);
+            ansClicked = true;
+            if(choices[currChoiceId].getAttribute("data-correct") === "true"){
+                console.log("correct answer selected, points added");
+                correctAnswers++;
+                console.log("correctAnswers", correctAnswers);
+            }else{
+                console.log("incorrect answer selected, seconds deducted");
+                secondsLeft -= 5;
+                console.log("correctAnswers", correctAnswers);
+            }
+        });
+    }
+
+    currQuestion++;
+    return checkEnd();
 }
 
+function checkEnd(){
+    let isEnd = false;
+
+    if(currQuestion === 9 || secondsLeft <= 0){
+        isEnd = true;
+    }
+    
+    if(!isEnd){return generateQuestion(currQuestion)}
+}
+
+
+
+// function checkCorrect(questionNumber){
+//     choices["choice_0"].addEventListener("click", function(){
+//         if(choices["choice_0"].getAttribute("data-correct") === "true"){
+//             correctAnswers++;
+//             currQuestion++;
+//             ask(currQuestion);
+//         }else{
+//             secondsLeft-=5;
+//             currQuestion++;
+//             ask(currQuestion);
+//         }
+//     });
+//     choices["choice_1"].addEventListener("click", function(){
+//         if(choices["choice_1"].getAttribute("data-correct") === "true"){
+//             correctAnswers++;
+//             currQuestion++;
+//             ask(currQuestion);
+//         }else{
+//             secondsLeft-=5;
+//             currQuestion++;
+//             ask(currQuestion);
+//         }
+//     });
+//     choices["choice_2"].addEventListener("click", function(){
+//         if(choices["choice_2"].getAttribute("data-correct") === "true"){
+//             correctAnswers++;
+//             currQuestion++;
+//             ask(currQuestion);
+//         }else{
+//             secondsLeft-=5;
+//             currQuestion++;
+//             ask(currQuestion);
+//         }
+//     });
+//     choices["choice_3"].addEventListener("click", function(){
+//         if(choices["choice_3"].getAttribute("data-correct") === "true"){
+//             correctAnswers++;
+//             currQuestion++;
+//             ask(currQuestion);
+//         }else{
+//             secondsLeft-=5;
+//             currQuestion++;
+//             ask(currQuestion);
+//         }
+//     });
+// }
+//TODO:Answer skips from question 3 to question 7 while testing quiz...
 
 highscoreBtn.addEventListener("click", function(){
     highscoreEl.setAttribute("class", "show");
