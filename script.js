@@ -5,13 +5,13 @@ var quizEl = document.querySelector("#quiz");
 
 var questionNumberEl = document.querySelector("#question-number");
 var questionEl = document.querySelector("#question");
-var allChoices = document.getElementsByClassName("answers");
 
 var choices = {};
 choices['choice_0'] = document.querySelector("#choice-0");
 choices['choice_1'] = document.querySelector("#choice-1");
 choices['choice_2'] = document.querySelector("#choice-2");
 choices['choice_3'] = document.querySelector("#choice-3");
+var allChoices = document.getElementsByClassName("answers");
 
 var highscoreBtn = document.querySelector("#highscore-btn");
 var highscoreEl = document.querySelector("#highscore-display")
@@ -23,22 +23,32 @@ var secondsLeft = 60;
 var currQuestion = 0;
 
 //IMPLEMENT LOCAL STORAGE FOR HIGHSCORES
-const testObject = {
-    "BM": 23
-}
+function loadHighscores(){
+    var storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
 
-window.localStorage.setItem("highscores", JSON.stringify(testObject));
-var storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
-var highscoreHtml = `<ul>`;
-console.log(storedHighscores);
-
-if(storedHighscores){
-    for (const score in storedHighscores) {
-        highscoreHtml += `<li>${score}: ${storedHighscores[score]}<li>`
+    if(!storedHighscores){
+        storedHighscores = {
+            "BM": 50
+        };
+        updateHighscores(JSON.stringify(storedHighscores));
     }
-    highscoreHtml += `</ul>`
+    displayHighscores();
 }
-highscoreContent.innerHTML = highscoreHtml;
+
+function displayHighscores(){
+    var storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
+    var highscoreHtml = `<ul>`;
+    console.log(storedHighscores);
+
+    if(storedHighscores){
+        for (const score in storedHighscores) {
+            highscoreHtml += `<li>${score}: ${storedHighscores[score]}<li>`
+        }
+        highscoreHtml += `</ul>`
+    }
+
+    highscoreContent.innerHTML = highscoreHtml;
+}
 
 function updateHighscores(highscoreObject){
     window.localStorage.setItem("highscores", JSON.stringify(highscoreObject));
@@ -80,6 +90,8 @@ beginBtn.addEventListener("click", function(){//begin quiz button event listener
     highscoreBtn.setAttribute("class", "hide");
     highscoreEl.setAttribute("class", "hide");
 
+    generateQuestion(currQuestion);
+
     var time = setInterval(function(){
         secondsLeft--;
         timer.textContent = secondsLeft;
@@ -89,8 +101,6 @@ beginBtn.addEventListener("click", function(){//begin quiz button event listener
             clearInterval(time);
         }
     }, 1000);
-
-    generateQuestion(currQuestion);
 });
 
 function generateQuestion(qNum){
@@ -118,6 +128,7 @@ function generateQuestion(qNum){
         }
     }
 //TODO: find a way to increment currQuestion only once after each answer of a question.
+//TODO: Watch day 1 and day 2 office hours of third party api for hwmk 4 help
     //call checkCorrect
     checkCorrect(qNum);
 }
@@ -136,19 +147,19 @@ function checkCorrect(questionNumber){ //checks if the clicked answer is correct
             if(choices[currChoiceId].getAttribute("data-correct") === "true"){
                 console.log("correct answer selected, points added");
                 correctAnswers++;
-                console.log("correctAnswers", correctAnswers);
+                
+                currQuestion++;
+                return checkEnd();
             }else{
                 console.log("incorrect answer selected, seconds deducted");
                 secondsLeft -= 5;
-                console.log("correctAnswers", correctAnswers);
+                
+                currQuestion++;
+                return checkEnd();
             }
         });
         if(ansClicked){break;}
     }
-
-    currQuestion++;
-    
-    return checkEnd();
 }
 
 function checkEnd(){
@@ -174,3 +185,5 @@ exitHighscore.addEventListener("click", function(){
     highscoreEl.setAttribute("class", "hide");
     mainEl.setAttribute("class", "show");
 });
+
+loadHighscores();
