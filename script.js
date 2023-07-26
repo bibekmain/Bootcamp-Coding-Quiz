@@ -1,5 +1,3 @@
-//TODO: Remove unnecessary logs bfor publication.
-
 let beginBtn = document .querySelector("#begin");
 let timerEl = document.querySelector("#time");
 let scoreEl = document.querySelector("#score");
@@ -27,7 +25,7 @@ let score = 0;
 let timer = 60;
 let timestamp = timer;
 let questionNum = 0;
-let storedUsers = [];
+let storedUsers;
 
 function shuffle(array){//function that shuffles a given array
     tempArr = array;
@@ -51,9 +49,6 @@ let referenceTrivia = [//the first answer in the answers array for each question
 referenceTrivia = shuffle(referenceTrivia);//calling shuffle function to shuffle trivia questions for each quiz attempt.
 let trivia = JSON.parse(JSON.stringify(referenceTrivia));// declare new trivia array which is a clone of the referenceTrivia.
 //referenceTrivia will only be used as reference from now on
-
-console.log("reference: ", referenceTrivia); //TODO:REMOVE LOGS BEFORE SUBMISSION
-console.log("trivia: ", trivia); //TODO:REMOVE LOGS BEFORE SUBMISSION
 
 for(let i=0; i<trivia.length; i++){//shuffle the answers in each trivia question
     trivia[i].answers = shuffle(trivia[i].answers);
@@ -85,7 +80,6 @@ function startTimer(){
 }
 
 function generateQuestion(){
-    console.log("current question: ", questionNum, " | answers length:", trivia[questionNum].answers.length);
     questionNumberEl.innerHTML = `Question ${questionNum+1}: `;
 
     //formatting the question
@@ -105,6 +99,10 @@ function generateQuestion(){
 
 function checkAnswer(selectedAnswer){
     if(selectedAnswer === referenceTrivia[questionNum].answers[0]){//if right answer, calculate score and add to score
+        /*
+        The time stamp is recorded when the quiz starts and when each new question is presented.
+        The score is calculated as the difference between the timestamp and the current time subtracted from 10 if it does not subceed 10.
+        */
         let timeDifference = timestamp - timer;
         let possibleScore = 10-timeDifference;
         if(possibleScore > 0){
@@ -121,7 +119,7 @@ function checkAnswer(selectedAnswer){
     questionNum++;
     if(questionNum < 10){
         choicesEl.innerHTML = "";//empty text content for the next set of answers
-        return generateQuestion();
+        return generateQuestion();//generate new question
     }else{
         return endQuiz();
     }
@@ -142,9 +140,8 @@ function endQuiz(){
             userScore: score
         }
         storedUsers.push(newScore);
-        window.localStorage.setItem("highscores", JSON.stringify(storedUsers))
-        // console.log(window.localStorage.getItem("highscores"));
-        displayHighscores()
+        window.localStorage.setItem("highscores", JSON.stringify(storedUsers));
+        displayHighscores();
 
         quizEndEl.setAttribute("class", "hide");
         highscoreEl.setAttribute("class", "show");
@@ -152,10 +149,9 @@ function endQuiz(){
     })
 }
 
-//IMPLEMENT LOCAL STORAGE FOR HIGHSCORES
-function loadHighscores(){
+//Local storage for Highscores:
+function loadHighscores(){//called at the begining of the program to load in the highscores
     let storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
-    console.log(storedHighscores);
 
     if(!storedHighscores){
         storedUsers = [];
@@ -164,10 +160,10 @@ function loadHighscores(){
         storedUsers = JSON.parse(window.localStorage.getItem("highscores"));
     }
 
-    displayHighscores()
+    displayHighscores();
 }
 
-function displayHighscores(){
+function displayHighscores(){//appends the highscore element with the saved highscores in local storage
     displayHtml = `<ul>`
 
     let storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
@@ -183,14 +179,14 @@ function displayHighscores(){
     highscoreContent.innerHTML = displayHtml;
 }
 
-highscoreBtn.addEventListener("click", function(){
+highscoreBtn.addEventListener("click", function(){//event listener for highscore button
     highscoreEl.setAttribute("class", "show");
     quizEl.setAttribute("class", "hide");
     mainEl.setAttribute("class", "hide");
     highscoreBtn.setAttribute("class", "hide");
     exitHighscoreContainerEl.setAttribute("class", "show")
 });
-exitHighscore.addEventListener("click", function(){
+exitHighscore.addEventListener("click", function(){//event listener for exit on highscore page
     highscoreEl.setAttribute("class", "hide");
     mainEl.setAttribute("class", "show");
     highscoreBtn.setAttribute("class", "show");
