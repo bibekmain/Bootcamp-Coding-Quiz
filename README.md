@@ -13,6 +13,7 @@ Bootcamp Coding Quiz is a simple coding quiz website that uses HTML, CSS, and Ja
 4. After all questions are answered, the webpage will display the score for the quiz.
 
 ## Live Demo:
-(insert gif of using the website)
+TODO:(insert gif of using the website)  
 
-
+Project by Bibek Mainali
+This is my submission for Homework-4 of the UC Berkeley Extension Bootcamp

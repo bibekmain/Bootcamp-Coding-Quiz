@@ -22,7 +22,7 @@ button:hover{
     cursor: pointer;
 }
 
-aside{
+#time-container{
     position: absolute;
     top: 20px;
     right: 30px;
@@ -30,10 +30,15 @@ aside{
     font-weight: bold;
 }
 
-#main, #quiz{
-    text-align: center;
+#score-container{
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-size: large;
+    font-weight: bold;
 }
-#begin{
+
+#main, #quiz, #begin{
     text-align: center;
 }
 
@@ -70,11 +75,18 @@ p{
 
 .answers{
     font-size: larger;
+    margin: 5px;
+    padding: 10px;
+    width: fit-content;
+}
+#choices{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-ul{
-    list-style-type: none;
-}
-li{
-    font-size: larger;
+#quiz-end{
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
 }
