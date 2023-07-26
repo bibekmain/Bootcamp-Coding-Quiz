@@ -22,6 +22,10 @@
             <div class="hide" id="score-container">Score:
                 <span id="score" >0</span>
             </div>
+            <div class="hide" id="exit-highscore-container">
+                <button id="exit-highscore">Go Back</button>
+            </div>
+            
         </header>
 
         <div id="main" class="show">
@@ -37,7 +41,6 @@
         </div>
 
         <div id="highscore-display" class="hide">
-            <button id="exit-highscore">X</button>
             <h1>Highscores:</h1>
             <div id="highscore-content">
 
@@ -48,7 +51,9 @@
             <div>
                 Your Score: <span id="final-score"></span>
             </div>
-            <input type="text" id="initials" placeholder="Enter Your Initials">
+            <form id="initials-form">
+                <input type="text" id="initials" placeholder="Enter Your Initials">
+            </form>
         </div>
 
         <script src="script.js"></script>

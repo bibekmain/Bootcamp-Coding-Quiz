@@ -14,16 +14,20 @@ let choicesEl = document.querySelector("#choices");
 
 let quizEndEl = document.querySelector("#quiz-end");
 let finalScoreEl = document.querySelector("#final-score");
+let initialsFormEl = document.querySelector("#initials-form");
+let initialsInputEl = document.querySelector("#initials");
 
 let highscoreBtn = document.querySelector("#highscore-btn");
 let highscoreEl = document.querySelector("#highscore-display");
 let exitHighscore = document.querySelector("#exit-highscore");
+let exitHighscoreContainerEl = document.querySelector("#exit-highscore-container");
 let highscoreContent = document.querySelector("#highscore-content");
 
 let score = 0;
 let timer = 60;
 let timestamp = timer;
 let questionNum = 0;
+let storedUsers = [];
 
 function shuffle(array){//function that shuffles a given array
     tempArr = array;
@@ -117,9 +121,9 @@ function checkAnswer(selectedAnswer){
     questionNum++;
     if(questionNum < 10){
         choicesEl.innerHTML = "";//empty text content for the next set of answers
-        generateQuestion();
+        return generateQuestion();
     }else{
-        endQuiz();
+        return endQuiz();
     }
 }
 
@@ -131,48 +135,67 @@ function endQuiz(){
     quizEndEl.setAttribute("class", "show");
 
     finalScoreEl.textContent = score;
+    initialsFormEl.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let newScore = {
+            user: initials.value,
+            userScore: score
+        }
+        storedUsers.push(newScore);
+        window.localStorage.setItem("highscores", JSON.stringify(storedUsers))
+        // console.log(window.localStorage.getItem("highscores"));
+        displayHighscores()
+
+        quizEndEl.setAttribute("class", "hide");
+        highscoreEl.setAttribute("class", "show");
+        exitHighscoreContainerEl.setAttribute("class", "show");
+    })
 }
 
 //IMPLEMENT LOCAL STORAGE FOR HIGHSCORES
 function loadHighscores(){
     let storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
+    console.log(storedHighscores);
 
     if(!storedHighscores){
-        storedHighscores = {
-            "BM": 50
-        };
-        updateHighscores(JSON.stringify(storedHighscores));
+        storedUsers = [];
+        updateHighscores(JSON.stringify(storedUsers));
+    }else{
+        storedUsers = JSON.parse(window.localStorage.getItem("highscores"));
     }
-    displayHighscores();
+
+    displayHighscores()
 }
 
 function displayHighscores(){
-    let storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
-    let highscoreHtml = `<ul>`;
-    console.log(storedHighscores);
+    displayHtml = `<ul>`
 
+    let storedHighscores = JSON.parse(window.localStorage.getItem("highscores"));
+    
     if(storedHighscores){
-        for (let score in storedHighscores) {
-            highscoreHtml += `<li>${score}: ${storedHighscores[score]}<li>`
-        }
-        highscoreHtml += `</ul>`
+        storedHighscores.forEach(highscore => {
+            displayHtml += `<li>${highscore.user} : ${highscore.userScore}</li>`
+        });
     }
 
-    highscoreContent.innerHTML = highscoreHtml;
-}
+    displayHtml += `</ul>`
 
-function updateHighscores(highscoreObject){
-    window.localStorage.setItem("highscores", JSON.stringify(highscoreObject));
+    highscoreContent.innerHTML = displayHtml;
 }
 
 highscoreBtn.addEventListener("click", function(){
     highscoreEl.setAttribute("class", "show");
     quizEl.setAttribute("class", "hide");
     mainEl.setAttribute("class", "hide");
+    highscoreBtn.setAttribute("class", "hide");
+    exitHighscoreContainerEl.setAttribute("class", "show")
 });
 exitHighscore.addEventListener("click", function(){
     highscoreEl.setAttribute("class", "hide");
     mainEl.setAttribute("class", "show");
+    highscoreBtn.setAttribute("class", "show");
+    exitHighscoreContainerEl.setAttribute("class", "hide")
+    location.reload();
 });
 
 loadHighscores();
