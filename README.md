@@ -15,7 +15,7 @@ Bootcamp Coding Quiz is a simple coding quiz website that uses HTML, CSS, and Ja
 6. Keep trying and get the highest of scores!
 
 ## Live Demo:
-TODO:(insert gif of using the website)  
+![Live Demo of Bootcamp Quiz Website](https://github.com/bibekmain/Bootcamp-Coding-Quiz/blob/de0c49a7c5feeac2f89226a3132a553c76fb960e/assets/Bootcamp-Quiz.gif) 
 
 Project by Bibek Mainali
 This is my submission for Homework-4 of the UC Berkeley Extension Full Stack Development Bootcamp
